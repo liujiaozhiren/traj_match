@@ -1,0 +1,38 @@
+[parallel_baseline] repo=/home/haitaoyuan/data/superJupterNote/traj-match
+[parallel_baseline] out_dir=/home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24
+[parallel_baseline] log_file=/home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24.log  (this stdout redirected by wrapper)
+[parallel_baseline] tasks=16 max_workers=4
+[done] frac=0.15 metric=hausdorff  code=0 29.0s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/hausdorff_lonlat_20260423_231300.json
+[done] frac=0.15 metric=frechet    code=0 30.1s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/frechet_lonlat_20260423_231301.json
+[done] frac=0.15 metric=dtw        code=0 30.5s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/dtw_lonlat_20260423_231301.json
+[done] frac=0.15 metric=sspd       code=0 32.7s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/sspd_lonlat_20260423_231304.json
+[done] frac=0.1  metric=hausdorff  code=0 6.4s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/hausdorff_lonlat_20260423_231307.json
+[done] frac=0.1  metric=dtw        code=0 7.6s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/dtw_lonlat_20260423_231307.json
+[done] frac=0.1  metric=frechet    code=0 6.8s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/frechet_lonlat_20260423_231308.json
+[done] frac=0.1  metric=sspd       code=0 8.1s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/sspd_lonlat_20260423_231311.json
+[done] frac=0.05 metric=hausdorff  code=0 19.6s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/hausdorff_lonlat_20260423_231327.json
+[done] frac=0.05 metric=frechet    code=0 19.3s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/frechet_lonlat_20260423_231327.json
+[done] frac=0.05 metric=dtw        code=0 20.1s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/dtw_lonlat_20260423_231327.json
+[done] frac=0.05 metric=sspd       code=0 15.9s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/sspd_lonlat_20260423_231327.json
+[done] frac=0.02 metric=sspd       code=0 4.5s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/sspd_lonlat_20260423_231332.json
+[done] frac=0.02 metric=hausdorff  code=0 4.8s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/hausdorff_lonlat_20260423_231332.json
+[done] frac=0.02 metric=frechet    code=0 4.8s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/frechet_lonlat_20260423_231332.json
+[done] frac=0.02 metric=dtw        code=0 5.5s  [lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/dtw_lonlat_20260423_231332.json
+[parallel_baseline] ALL_OK elapsed=64.2s
+--- summary lines ---
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/dtw_lonlat_20260423_231332.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/frechet_lonlat_20260423_231332.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/hausdorff_lonlat_20260423_231332.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/sspd_lonlat_20260423_231332.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/dtw_lonlat_20260423_231327.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/frechet_lonlat_20260423_231327.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/hausdorff_lonlat_20260423_231327.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/sspd_lonlat_20260423_231327.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/dtw_lonlat_20260423_231307.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/frechet_lonlat_20260423_231308.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/hausdorff_lonlat_20260423_231307.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/sspd_lonlat_20260423_231311.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/dtw_lonlat_20260423_231301.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/frechet_lonlat_20260423_231301.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/hausdorff_lonlat_20260423_231300.json
+[lonlat_metric_baseline] wrote /home/haitaoyuan/data/superJupterNote/traj-match/cursor_baseline/results/v2_maxdtw_baseline_passes30_parallel_2026-04-24/sspd_lonlat_20260423_231304.json
