@@ -1,58 +1,7 @@
-# -----------------------------
-# Local artifacts / caches
-# -----------------------------
+# Only ignore category (1): local caches / editor artifacts.
+# Everything else should be committed (and will be tracked via Git LFS when configured).
 __pycache__/
 .pytest_cache/
 .vscode/
 .cursor/
 .DS_Store
-
-# -----------------------------
-# Model / cache artifacts
-# -----------------------------
-*.pth
-*.pt
-*.pkl
-*.pkl.gz
-*.pkl.bz2
-*.pkl.xz
-*.pkl.zip
-*.pkl.tar
-*.pkl.tar.gz
-*.pkl.tar.bz2
-*.pkl.tar.xz
-*.pkl.tar.zip
-
-# Training run outputs
-cursor_mod_runs/
-
-# -----------------------------
-# Keep raw-data in repo
-# (even if it contains .pkl temp files)
-# -----------------------------
-!raw-data/**
-!raw-data/**/*.pkl
-!raw-data/**/*.pkl.gz
-!raw-data/**/*.pkl.bz2
-!raw-data/**/*.pkl.xz
-!raw-data/**/*.pkl.zip
-!raw-data/**/*.pkl.tar
-!raw-data/**/*.pkl.tar.gz
-!raw-data/**/*.pkl.tar.bz2
-!raw-data/**/*.pkl.tar.xz
-!raw-data/**/*.pkl.tar.zip
-
-# -----------------------------
-# Keep cursor_mod_4/pipeline in repo
-# (dataset snapshots like all_pairs_v*.pkl)
-# -----------------------------
-!cursor_mod_4/pipeline/**
-!cursor_mod_4/pipeline/**/*.pkl
-!cursor_mod_4/pipeline/**/*.pkl.gz
-!cursor_mod_4/pipeline/**/*.pkl.bz2
-!cursor_mod_4/pipeline/**/*.pkl.xz
-!cursor_mod_4/pipeline/**/*.pkl.zip
-
-# GitHub >100MB blocks (keep local, not in repo)
-new_test/tmp_db
-pretrain/data/porto/porto.csv
