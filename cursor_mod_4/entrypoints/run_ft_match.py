@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import importlib
+import json
 import os
 import pickle
 import sys
@@ -34,11 +35,23 @@ from cursor_mod_4.proc import clean_pairs, proc_multi_single_traj  # noqa: E402
 
 def parse_args():
     p = argparse.ArgumentParser()
+    p.add_argument(
+        "--pairs-pkl",
+        type=str,
+        default=None,
+        help="Optional. If set, load pairs directly from this pickle (list of 7-tuples). "
+        "If omitted, load from cfg.con_file (traj_cmb.pkl pipeline).",
+    )
     p.add_argument("--output-dir", type=str, required=True)
     p.add_argument("--cache", type=str, default=None)
     p.add_argument("--regenerate-cache", action="store_true")
     p.add_argument("--hydra-tail", type=int, default=64)
-    p.add_argument("--cache-gen-batch", type=int, default=256)
+    p.add_argument(
+        "--cache-gen-batch",
+        type=int,
+        default=16,
+        help="Batch size while generating hydra-only cache. Larger = fewer tqdm steps but each step slower/heavier VRAM.",
+    )
     p.add_argument("--max-pairs", type=int, default=None, help="Debug: limit total pairs for cache/training")
     p.add_argument("--max-raw-trajs", type=int, default=None, help="Debug: limit number of raw single trajectories processed")
     p.add_argument("--rl-use", type=int, default=16)
@@ -46,7 +59,7 @@ def parse_args():
     p.add_argument("--valid-batch", type=int, default=10)
     p.add_argument("--lr", type=float, default=1e-5)
     p.add_argument("--max-epochs", type=int, default=500)
-    p.add_argument("--early-stop", type=int, default=15)
+    p.add_argument("--early-stop", type=int, default=10)
     p.add_argument("--sample-ratio", type=float, default=0.1)
     p.add_argument("--sample-seed", type=int, default=42)
     p.add_argument(
@@ -67,7 +80,14 @@ def parse_args():
         default=3,
         help="Each epoch: repeat valid on independent random 15%% (or --valid-sample-frac) subsets this many times; average metrics + valid_loss_ce.",
     )
-    p.add_argument("--match-scheme", type=int, default=0, choices=[0, 1, 2, 3, 4])
+    p.add_argument("--match-scheme", type=int, default=4, choices=[0, 1, 2, 3, 4])
+    p.add_argument(
+        "--train-loss-mode",
+        type=str,
+        default="bce",
+        choices=["bce", "bb_ce"],
+        help="bce: pos/neg pair BCE (all schemes). bb_ce: batch retrieval CE on B×B logits (scheme 3/4 only; same graph as valid).",
+    )
     p.add_argument("--device", type=str, default=None)
     p.add_argument("--diff-pre-ckpt", type=str, required=True)
     p.add_argument("--diff-post-ckpt", type=str, required=True)
@@ -81,6 +101,14 @@ def _load_all_pairs(max_raw_trajs: int | None):
     mul_p, sing_p = proc_multi_single_traj(multi_traj_cmb, single_traj_cmb)
     return clean_pairs(mul_p + sing_p)
 
+def _load_pairs_pkl(path: str):
+    raw = pickle.load(open(path, "rb"))
+    if not isinstance(raw, list):
+        raise TypeError(f"--pairs-pkl must be a list, got {type(raw).__name__}")
+    if raw and (not isinstance(raw[0], (tuple, list)) or len(raw[0]) != 7):
+        raise TypeError(f"--pairs-pkl items must be 7-tuples; first item len={len(raw[0]) if raw else 'n/a'}")
+    return raw
+
 
 def main():
     args = parse_args()
@@ -92,8 +120,15 @@ def main():
     cache_path = args.cache or os.path.join(out_dir, "hydra_only_cache_84.pt")
 
     if args.regenerate_cache or not os.path.exists(cache_path):
-        print("[run_ft_match_84] loading pairs from traj_cmb.pkl ...", flush=True)
-        pairs = _load_all_pairs(args.max_raw_trajs)
+        if args.pairs_pkl:
+            print(
+                f"[run_ft_match_84] loading pairs from pairs-pkl (cfg.con_file not used): {args.pairs_pkl}",
+                flush=True,
+            )
+            pairs = _load_pairs_pkl(args.pairs_pkl)
+        else:
+            print("[run_ft_match_84] loading pairs from traj_cmb.pkl ...", flush=True)
+            pairs = _load_all_pairs(args.max_raw_trajs)
         print(f"[run_ft_match_84] pairs loaded: {len(pairs)}", flush=True)
         if args.max_pairs is not None:
             pairs = pairs[: int(args.max_pairs)]
@@ -103,7 +138,13 @@ def main():
         print("[run_ft_match_84] loading diffusion ckpts ...", flush=True)
         pre.unet.load_state_dict(torch.load(args.diff_pre_ckpt, map_location=cfg.device), strict=True)
         post.unet.load_state_dict(torch.load(args.diff_post_ckpt, map_location=cfg.device), strict=True)
-        print("[run_ft_match_84] generating hydra-only cache ...", flush=True)
+        n_pairs = len(pairs)
+        n_steps = (n_pairs + int(args.cache_gen_batch) - 1) // int(args.cache_gen_batch)
+        print(
+            f"[run_ft_match_84] generating hydra-only cache: N={n_pairs} hydra_tail={int(args.hydra_tail)} "
+            f"cache_gen_batch={int(args.cache_gen_batch)} dataloader_steps={n_steps}",
+            flush=True,
+        )
         cache = build_hydra_only_cache(
             pairs=pairs,
             pre_diff=pre,
@@ -116,6 +157,7 @@ def main():
         cache.save(cache_path)
         print("[run_ft_match_84] cache saved.", flush=True)
 
+    print(f"[run_ft_match_84] train_loss_mode={args.train_loss_mode}", flush=True)
     res = run_ft_match_84(
         output_dir=out_dir,
         cache_path=cache_path,
@@ -131,6 +173,9 @@ def main():
         valid_sample_seed=args.valid_sample_seed,
         valid_n_passes=int(args.valid_n_passes),
         match_scheme=int(args.match_scheme),
+        pairs_pkl=args.pairs_pkl,
+        max_pairs=args.max_pairs,
+        train_loss_mode=str(args.train_loss_mode),
     )
     print(
         f"[run_ft_match_84] done scheme={int(args.match_scheme)} best_ep={res.best_epoch} best_acc={res.best_acc:.4f} "
@@ -140,6 +185,11 @@ def main():
         f"best_ckpt={res.best_ckpt}",
         flush=True,
     )
+    if res.posthoc_valid:
+        ph_path = os.path.join(out_dir, "posthoc_valid_best.json")
+        with open(ph_path, "w", encoding="utf-8") as f:
+            json.dump(res.posthoc_valid, f, indent=2)
+        print(f"[run_ft_match_84] posthoc metrics (best ckpt @ fracs 0.15/0.10/0.05/0.02) -> {ph_path}", flush=True)
 
 
 if __name__ == "__main__":

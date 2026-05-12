@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import pickle
 from dataclasses import dataclass
-from typing import Sequence, Tuple
+from typing import Literal, Sequence, Tuple
 
 import torch
 import torch.nn.functional as F
@@ -13,23 +13,32 @@ from tqdm import tqdm
 import cfg
 from cursor_mod_4.geo_coords import match_traj_pts_to_xy_m
 from cursor_mod_4.ft_match.hydra_cache import HydraOnlyCache
+from cursor_mod_4.ft_match.pair_split import split_train_valid_indices
 from cursor_mod_4.match import MatchModel, build_match_inputs
 from cursor_mod_4.match.matcher import pair_loss
 from cursor_mod_4.proc import clean_pairs, proc_multi_single_traj
-from cursor_mod_4.sample_db import sample_db
 
 
 class PairIdxDataset(Dataset):
-    def __init__(self, pairs: Sequence[tuple], *, max_len: int | None = None):
+    """
+    Returns (global_cache_idx, pair). `global_cache_idx` indexes rows in HydraOnlyCache
+    built from the same `all_pairs` list in stable order (row i <-> all_pairs[i]).
+    """
+
+    def __init__(self, pairs: Sequence[tuple], global_indices: Sequence[int], *, max_len: int | None = None):
         self.pairs = list(pairs)
+        self.gidx = [int(x) for x in global_indices]
+        if len(self.pairs) != len(self.gidx):
+            raise ValueError("pairs and global_indices length mismatch")
         if max_len is not None:
             self.pairs = self.pairs[: int(max_len)]
+            self.gidx = self.gidx[: int(max_len)]
 
     def __len__(self) -> int:
         return len(self.pairs)
 
     def __getitem__(self, i: int):
-        return i, self.pairs[i]
+        return self.gidx[i], self.pairs[i]
 
 
 def _pair_to_info_xy8(item) -> tuple[torch.Tensor, torch.Tensor]:
@@ -58,13 +67,22 @@ def _collate_idx_info(batch):
     )
 
 
-def _load_pairs(sample_ratio: float, sample_seed: int):
+def _load_pairs_traj_cmb(sample_ratio: float, sample_seed: int):
     multi_traj_cmb, single_traj_cmb = pickle.load(open(cfg.con_file, "rb"))
     mul_p, sing_p = proc_multi_single_traj(multi_traj_cmb, single_traj_cmb)
     all_pairs = clean_pairs(mul_p + sing_p)
-    valid = sample_db(all_pairs, ratio=sample_ratio, seed=sample_seed)
-    train = [p for p in all_pairs if p not in valid]
-    return train, valid
+    return split_train_valid_indices(all_pairs, sample_ratio, sample_seed)
+
+
+def _load_pairs_pkl(pkl_path: str, sample_ratio: float, sample_seed: int, *, max_pairs: int | None = None):
+    raw = pickle.load(open(pkl_path, "rb"))
+    if not isinstance(raw, list):
+        raise TypeError(f"pairs_pkl must be a list, got {type(raw).__name__}")
+    if raw and (not isinstance(raw[0], (tuple, list)) or len(raw[0]) != 7):
+        raise TypeError(f"pairs_pkl items must be 7-tuples; first len={len(raw[0]) if raw else 'n/a'}")
+    if max_pairs is not None:
+        raw = raw[: int(max_pairs)]
+    return split_train_valid_indices(raw, sample_ratio, sample_seed)
 
 
 def _hr_at(scores: torch.Tensor, k: int) -> float:
@@ -93,6 +111,99 @@ class TrainResult:
     best_r10_at_20: float
     best_valid_loss_ce: float
     best_epoch: int | None
+    # After training: best checkpoint re-evaluated at smaller valid pools (same valid split, new frac).
+    posthoc_valid: list[dict] | None = None
+
+
+@torch.no_grad()
+def _evaluate_valid_retrieval(
+    match: torch.nn.Module,
+    *,
+    valid_info_pre: torch.Tensor,
+    valid_info_post: torch.Tensor,
+    valid_hydra_pre: torch.Tensor,
+    valid_hydra_post: torch.Tensor,
+    n_valid: int,
+    valid_batch: int,
+    valid_sample_frac: float,
+    valid_n_passes: int,
+    base_seed: int,
+    match_scheme: int,
+    desc: str,
+    show_pbar: bool,
+) -> dict:
+    k = max(1, min(n_valid, int(round(float(n_valid) * float(valid_sample_frac)))))
+    n_passes = max(1, int(valid_n_passes))
+    acc_s = hr5_s = hr10_s = hr20_s = r51_s = r102_s = vloss_s = 0.0
+    for rep in range(n_passes):
+        g = torch.Generator(device="cpu")
+        g.manual_seed(int(base_seed) + rep * 7919)
+        perm = torch.randperm(n_valid, generator=g)[:k]
+        samp = perm.long()
+
+        post_info = valid_info_post[samp].to(cfg.device)
+        post_hydra = valid_hydra_post[samp].to(cfg.device)
+
+        scores = torch.zeros((k, k), device=cfg.device)
+        num = 0
+        n_batches = (k + valid_batch - 1) // valid_batch
+        inner = range(n_batches)
+        if show_pbar:
+            inner = tqdm(inner, desc=f"{desc} pass{rep+1}/{n_passes} k={k}/{n_valid}", mininterval=0.5)
+        for bi in inner:
+            i0 = bi * valid_batch
+            i1 = min(i0 + valid_batch, k)
+            b = i1 - i0
+            row_idx = samp[i0:i1]
+            q_info_pre = valid_info_pre[row_idx].to(cfg.device, non_blocking=True)
+            q_hydra_pre = valid_hydra_pre[row_idx].to(cfg.device, non_blocking=True)
+            x = build_match_inputs(
+                scheme=int(match_scheme),
+                trajA_head=q_info_pre,
+                trajB_head=post_info,
+                trajA_tail=q_hydra_pre,
+                trajB_tail=post_hydra,
+                pair=True,
+                valid=True,
+            )
+            ret = match.match(x, pairs=True).view(b, k)
+            scores[num : num + b] = ret
+            num += b
+            if show_pbar:
+                inner.set_postfix(rows=f"{num}/{k}")
+        if show_pbar and hasattr(inner, "close"):
+            inner.close()
+
+        pred = scores.argmax(dim=1)
+        gt = torch.arange(k, device=cfg.device)
+        acc_p = float((pred == gt).float().mean().item())
+        hr5_p = _hr_at(scores, 5)
+        hr10_p = _hr_at(scores, 10)
+        hr20_p = _hr_at(scores, 20)
+        r5_at_10_p = hr5_p / hr10_p if hr10_p > 1e-12 else 0.0
+        r10_at_20_p = hr10_p / hr20_p if hr20_p > 1e-12 else 0.0
+        vloss_p = float(F.cross_entropy(scores, gt.long()).item())
+
+        acc_s += acc_p
+        hr5_s += hr5_p
+        hr10_s += hr10_p
+        hr20_s += hr20_p
+        r51_s += r5_at_10_p
+        r102_s += r10_at_20_p
+        vloss_s += vloss_p
+
+    return {
+        "valid_sample_frac": float(valid_sample_frac),
+        "k": int(k),
+        "n_valid": int(n_valid),
+        "acc": acc_s / n_passes,
+        "hr5": hr5_s / n_passes,
+        "hr10": hr10_s / n_passes,
+        "hr20": hr20_s / n_passes,
+        "r5_at_10": r51_s / n_passes,
+        "r10_at_20": r102_s / n_passes,
+        "valid_loss_ce": vloss_s / n_passes,
+    }
 
 
 def run_ft_match_84(
@@ -111,17 +222,61 @@ def run_ft_match_84(
     valid_sample_seed: int | None = None,
     valid_n_passes: int = 3,
     match_scheme: int = 0,
+    pairs_pkl: str | None = None,
+    max_pairs: int | None = None,
+    train_loss_mode: Literal["bce", "bb_ce"] = "bce",
 ) -> TrainResult:
     os.makedirs(output_dir, exist_ok=True)
 
-    train_pairs, valid_pairs = _load_pairs(sample_ratio, sample_seed)
-    train_ds = PairIdxDataset(train_pairs)
-    valid_ds = PairIdxDataset(valid_pairs)
+    tlm = str(train_loss_mode).lower()
+    if tlm not in ("bce", "bb_ce"):
+        raise ValueError(f"train_loss_mode must be 'bce' or 'bb_ce', got {train_loss_mode!r}")
+    if tlm == "bb_ce" and int(match_scheme) not in (3, 4):
+        raise ValueError(
+            "train_loss_mode='bb_ce' is only defined for match_scheme 3 or 4 (tensor B×B retrieval). "
+            "Schemes 0/1/2 use graph + pair BCE labels; keep train_loss_mode='bce'."
+        )
+
+    print(
+        f"[ft_match_84] train_loss_mode={tlm} match_scheme={int(match_scheme)}",
+        flush=True,
+    )
+
+    if pairs_pkl:
+        train_pairs, valid_pairs, train_gidx, valid_gidx = _load_pairs_pkl(
+            pairs_pkl, sample_ratio, sample_seed, max_pairs=max_pairs
+        )
+    else:
+        train_pairs, valid_pairs, train_gidx, valid_gidx = _load_pairs_traj_cmb(sample_ratio, sample_seed)
+    train_ds = PairIdxDataset(train_pairs, train_gidx)
     train_loader = DataLoader(train_ds, batch_size=train_batch, shuffle=True, num_workers=0, pin_memory=False, collate_fn=_collate_idx_info)
 
     cache = HydraOnlyCache.load(cache_path)
     hydra_pre_all = cache.hydra_pre[:, :rl_use]  # (N, rl_use, k, 2)
     hydra_post_all = cache.hydra_post[:, :rl_use]
+
+    n_pairs_total = len(train_pairs) + len(valid_pairs)
+    if int(hydra_pre_all.shape[0]) != int(n_pairs_total):
+        raise ValueError(
+            f"Hydra cache rows ({hydra_pre_all.shape[0]}) != train+valid pair count ({n_pairs_total}); "
+            "rebuild cache with the same --pairs-pkl and --max-pairs as this run."
+        )
+    if pairs_pkl:
+        print(
+            f"[ft_match_84] pairs source=pkl only (cfg.con_file not used): {os.path.abspath(pairs_pkl)}",
+            flush=True,
+        )
+
+    n_valid = len(valid_pairs)
+    valid_info_pre = torch.zeros((n_valid, cfg.diff_pre_len, 2), dtype=torch.float32)
+    valid_info_post = torch.zeros((n_valid, cfg.diff_pre_len, 2), dtype=torch.float32)
+    for i in range(n_valid):
+        ip, io = _pair_to_info_xy8(valid_pairs[i])
+        valid_info_pre[i] = ip
+        valid_info_post[i] = io
+    vg = torch.tensor(valid_gidx, dtype=torch.long, device="cpu")
+    valid_hydra_pre = hydra_pre_all[vg]
+    valid_hydra_post = hydra_post_all[vg]
 
     match = MatchModel(dim=128, scheme=int(match_scheme)).to(cfg.device)
     optim = torch.optim.Adam(match.parameters(), lr=lr)
@@ -133,6 +288,7 @@ def run_ft_match_84(
     best_r5_at_10 = best_r10_at_20 = 0.0
     best_valid_loss_ce = float("inf")
     stall = 0
+    n_passes = max(1, int(valid_n_passes))
 
     for ep in range(1, max_epochs + 1):
         match.train()
@@ -142,20 +298,37 @@ def run_ft_match_84(
             # info_*: (B,8,2) meters
             info_pre = info_pre.to(cfg.device, non_blocking=True)
             info_post = info_post.to(cfg.device, non_blocking=True)
-            hydra_pre = hydra_pre_all[idxs].to(cfg.device, non_blocking=True)   # (B,rl_use,4,2)
+            # idxs: global row indices into hydra cache (same order as full pair list used at cache build)
+            hydra_pre = hydra_pre_all[idxs].to(cfg.device, non_blocking=True)  # (B,rl_use,4,2)
             hydra_post = hydra_post_all[idxs].to(cfg.device, non_blocking=True)
+            B = int(info_pre.shape[0])
 
-            x, y = build_match_inputs(
-                scheme=int(match_scheme),
-                trajA_head=info_pre,
-                trajB_head=info_post,
-                trajA_tail=hydra_pre,
-                trajB_tail=hydra_post,
-                pair=True,
-                valid=False,
-            )
-            ret = match.match(x, pairs=True).view(-1)
-            loss = pair_loss(ret, y).mean()
+            if tlm == "bb_ce":
+                if B < 2:
+                    continue
+                x = build_match_inputs(
+                    scheme=int(match_scheme),
+                    trajA_head=info_pre,
+                    trajB_head=info_post,
+                    trajA_tail=hydra_pre,
+                    trajB_tail=hydra_post,
+                    pair=True,
+                    valid=True,
+                )
+                logits = match.match(x, pairs=True).view(B, B).float()
+                loss = F.cross_entropy(logits, torch.arange(B, device=cfg.device, dtype=torch.long))
+            else:
+                x, y = build_match_inputs(
+                    scheme=int(match_scheme),
+                    trajA_head=info_pre,
+                    trajB_head=info_post,
+                    trajA_tail=hydra_pre,
+                    trajB_tail=hydra_post,
+                    pair=True,
+                    valid=False,
+                )
+                ret = match.match(x, pairs=True).view(-1)
+                loss = pair_loss(ret, y).mean()
             optim.zero_grad()
             loss.backward()
             optim.step()
@@ -163,89 +336,32 @@ def run_ft_match_84(
             pbar.set_postfix(loss=f"{losses[-1]:.4f}")
         pbar.close()
 
-        # valid: several passes of random ~frac*|valid| subset, k×k retrieval; average metrics + row-wise CE loss
         match.eval()
         with torch.no_grad():
-            n_valid = len(valid_ds)
-            valid_info_pre = torch.zeros((n_valid, cfg.diff_pre_len, 2), dtype=torch.float32)
-            valid_info_post = torch.zeros((n_valid, cfg.diff_pre_len, 2), dtype=torch.float32)
-            for i in range(n_valid):
-                ip, io = _pair_to_info_xy8(valid_pairs[i])
-                valid_info_pre[i] = ip
-                valid_info_post[i] = io
-            valid_hydra_pre = hydra_pre_all[:n_valid]
-            valid_hydra_post = hydra_post_all[:n_valid]
-
-            k = max(1, min(n_valid, int(round(float(n_valid) * float(valid_sample_frac)))))
-            n_passes = max(1, int(valid_n_passes))
             base_seed = int(valid_sample_seed) if valid_sample_seed is not None else (int(sample_seed) + int(ep))
-
-            acc_s = hr5_s = hr10_s = hr20_s = r51_s = r102_s = vloss_s = 0.0
-            for rep in range(n_passes):
-                g = torch.Generator(device="cpu")
-                g.manual_seed(int(base_seed) + rep * 7919)
-                perm = torch.randperm(n_valid, generator=g)[:k]
-                samp = perm.long()
-
-                post_info = valid_info_post[samp].to(cfg.device)
-                post_hydra = valid_hydra_post[samp].to(cfg.device)
-
-                scores = torch.zeros((k, k), device=cfg.device)
-                num = 0
-                n_batches = (k + valid_batch - 1) // valid_batch
-                vbar = tqdm(
-                    range(n_batches),
-                    desc=f"[ft_match_84] valid ep{ep}/{max_epochs} pass{rep+1}/{n_passes} k={k}/{n_valid}",
-                    mininterval=0.5,
-                )
-                for bi in vbar:
-                    i0 = bi * valid_batch
-                    i1 = min(i0 + valid_batch, k)
-                    b = i1 - i0
-                    row_idx = samp[i0:i1]
-                    q_info_pre = valid_info_pre[row_idx].to(cfg.device, non_blocking=True)
-                    q_hydra_pre = valid_hydra_pre[row_idx].to(cfg.device, non_blocking=True)
-                    x = build_match_inputs(
-                        scheme=int(match_scheme),
-                        trajA_head=q_info_pre,
-                        trajB_head=post_info,
-                        trajA_tail=q_hydra_pre,
-                        trajB_tail=post_hydra,
-                        pair=True,
-                        valid=True,
-                    )
-                    ret = match.match(x, pairs=True).view(b, k)
-                    scores[num : num + b] = ret
-                    num += b
-                    vbar.set_postfix(rows=f"{num}/{k}")
-                vbar.close()
-
-                pred = scores.argmax(dim=1)
-                gt = torch.arange(k, device=cfg.device)
-                acc_p = float((pred == gt).float().mean().item())
-                hr5_p = _hr_at(scores, 5)
-                hr10_p = _hr_at(scores, 10)
-                hr20_p = _hr_at(scores, 20)
-                r5_at_10_p = hr5_p / hr10_p if hr10_p > 1e-12 else 0.0
-                r10_at_20_p = hr10_p / hr20_p if hr20_p > 1e-12 else 0.0
-                # row-wise softmax CE vs diagonal label (same decision rule as acc; comparable scale across k)
-                vloss_p = float(F.cross_entropy(scores, gt.long()).item())
-
-                acc_s += acc_p
-                hr5_s += hr5_p
-                hr10_s += hr10_p
-                hr20_s += hr20_p
-                r51_s += r5_at_10_p
-                r102_s += r10_at_20_p
-                vloss_s += vloss_p
-
-            acc = acc_s / n_passes
-            hr5 = hr5_s / n_passes
-            hr10 = hr10_s / n_passes
-            hr20 = hr20_s / n_passes
-            r5_at_10 = r51_s / n_passes
-            r10_at_20 = r102_s / n_passes
-            valid_loss = vloss_s / n_passes
+            vm = _evaluate_valid_retrieval(
+                match,
+                valid_info_pre=valid_info_pre,
+                valid_info_post=valid_info_post,
+                valid_hydra_pre=valid_hydra_pre,
+                valid_hydra_post=valid_hydra_post,
+                n_valid=n_valid,
+                valid_batch=valid_batch,
+                valid_sample_frac=float(valid_sample_frac),
+                valid_n_passes=valid_n_passes,
+                base_seed=base_seed,
+                match_scheme=int(match_scheme),
+                desc=f"[ft_match_84] valid ep{ep}/{max_epochs}",
+                show_pbar=True,
+            )
+        acc = float(vm["acc"])
+        hr5 = float(vm["hr5"])
+        hr10 = float(vm["hr10"])
+        hr20 = float(vm["hr20"])
+        r5_at_10 = float(vm["r5_at_10"])
+        r10_at_20 = float(vm["r10_at_20"])
+        valid_loss = float(vm["valid_loss_ce"])
+        k = int(vm["k"])
 
         if acc > best_acc:
             best_acc = acc
@@ -273,6 +389,39 @@ def run_ft_match_84(
             flush=True,
         )
 
+    posthoc_valid: list[dict] = []
+    if best_ckpt is not None and os.path.isfile(best_ckpt):
+        match.load_state_dict(torch.load(best_ckpt, map_location=cfg.device))
+        match.eval()
+        with torch.no_grad():
+            for fi, frac in enumerate((0.15, 0.10, 0.05, 0.02)):
+                pm = _evaluate_valid_retrieval(
+                    match,
+                    valid_info_pre=valid_info_pre,
+                    valid_info_post=valid_info_post,
+                    valid_hydra_pre=valid_hydra_pre,
+                    valid_hydra_post=valid_hydra_post,
+                    n_valid=n_valid,
+                    valid_batch=valid_batch,
+                    valid_sample_frac=float(frac),
+                    valid_n_passes=valid_n_passes,
+                    base_seed=int(sample_seed) + 951_000 + fi * 97,
+                    match_scheme=int(match_scheme),
+                    desc=f"[ft_match_84] posthoc_best frac={frac}",
+                    show_pbar=False,
+                )
+                posthoc_valid.append(pm)
+                print(
+                    f"[ft_match_84] posthoc_best ep={best_epoch} ckpt={best_ckpt} valid_sample_frac={frac} "
+                    f"k={pm['k']}/{n_valid} ({100.0 * float(pm['k']) / max(1, n_valid):.1f}%) "
+                    f"valid_loss_ce={pm['valid_loss_ce']:.6f} (mean over {n_passes} passes) "
+                    f"acc={pm['acc']:.4f} HR5={pm['hr5']:.4f} HR10={pm['hr10']:.4f} HR20={pm['hr20']:.4f} "
+                    f"R5@10={pm['r5_at_10']:.4f} R10@20={pm['r10_at_20']:.4f}",
+                    flush=True,
+                )
+    else:
+        print("[ft_match_84] posthoc_best skipped (no checkpoint was saved).", flush=True)
+
     return TrainResult(
         best_acc=best_acc,
         best_ckpt=best_ckpt,
@@ -283,5 +432,6 @@ def run_ft_match_84(
         best_r10_at_20=best_r10_at_20,
         best_valid_loss_ce=best_valid_loss_ce,
         best_epoch=best_epoch,
+        posthoc_valid=posthoc_valid if posthoc_valid else None,
     )
 

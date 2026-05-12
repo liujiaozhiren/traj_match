@@ -5,6 +5,10 @@ Goal:
   - Load a trained MatchModel checkpoint (e.g. scheme4) and freeze it.
   - Train a DeepLinUCBSelector to pick k_select tails out of hydra_tail candidates (default 16 out of 64).
   - Save selector checkpoint separately (decoupled from match scheme/weights).
+
+Match fine-tuning (`run_ft_match.py` / `run_ft_match_84`) may use `--train-loss-mode bb_ce` (B×B CE) or
+default BCE pairs; this script does not run that loss: it only loads the resulting weights and uses
+frozen-match logits for bandit rewards / valid CE retrieval.
 """
 
 from __future__ import annotations
