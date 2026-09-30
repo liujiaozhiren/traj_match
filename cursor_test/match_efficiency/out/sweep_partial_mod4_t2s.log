@@ -1,0 +1,58 @@
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/cuda/__init__.py:54: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[sweep] offline index mod4 N=1000 ...
+  t_index=0.4s
+[sweep] offline index traj2simvec N=1000 ...
+  t_index=0.1s
+
+=== online N=100 gallery_batch=100 ===
+  mod4 ... T_e2e=0.045s (q=0.006 gal=0.038)
+  traj2simvec ... T_e2e=0.058s (q=0.003 gal=0.055)
+
+=== online N=200 gallery_batch=200 ===
+  mod4 ... T_e2e=0.080s (q=0.006 gal=0.074)
+  traj2simvec ... T_e2e=0.108s (q=0.002 gal=0.106)
+
+=== online N=500 gallery_batch=500 ===
+  mod4 ... T_e2e=0.322s (q=0.006 gal=0.316)
+  traj2simvec ... T_e2e=0.269s (q=0.002 gal=0.267)
+
+=== online N=1000 gallery_batch=512 ===
+  mod4 ... T_e2e=0.637s (q=0.006 gal=0.631)
+  traj2simvec ... T_e2e=0.530s (q=0.002 gal=0.528)
+
+Wrote cursor_test/match_efficiency/out/sweep_partial_mod4_t2s.json
+Wrote cursor_test/match_efficiency/out/sweep_partial_mod4_t2s.md
+# Gallery size sweep — 14 methods (scratch, no ckpt)
+
+13 baselines + cursor_mod_4. Online `T_e2e` = `T_query` + `T_gallery`.
+Gallery encode/diffusion counted in **online** `T_gallery`.
+
+## T_e2e (s)
+
+| method | 100 | 200 | 500 | 1000 |
+|---|---:|---:|---:|---:|
+| mod4 | 0.0446 | 0.0799 | 0.3224 | 0.6372 |
+| traj2simvec | 0.0581 | 0.1084 | 0.2692 | 0.5305 |
+
+## T_query (s)
+
+| method | 100 | 200 | 500 | 1000 |
+|---|---:|---:|---:|---:|
+| mod4 | 0.0064 | 0.0063 | 0.0060 | 0.0061 |
+| traj2simvec | 0.0027 | 0.0024 | 0.0024 | 0.0024 |
+
+## T_gallery (s)
+
+| method | 100 | 200 | 500 | 1000 |
+|---|---:|---:|---:|---:|
+| mod4 | 0.0382 | 0.0736 | 0.3164 | 0.6310 |
+| traj2simvec | 0.0554 | 0.1060 | 0.2668 | 0.5281 |
+
+## VRAM (MiB)
+
+| method | 100 | 200 | 500 | 1000 |
+|---|---:|---:|---:|---:|
+| mod4 | 105.6392 | 169.6318 | 358.9995 | 366.5317 |
+| traj2simvec | 55.4580 | 56.0298 | 57.7446 | 60.7905 |
+

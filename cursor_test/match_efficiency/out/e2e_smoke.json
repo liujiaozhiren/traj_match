@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "gallery_size": 32,
+    "n_queries": 2
+  },
+  "rows": [
+    {
+      "method": "dtw",
+      "n_gallery": 32,
+      "gallery_batch": 32,
+      "hydra_tail": 64,
+      "device": "cpu",
+      "p_total": 0,
+      "p_model": 0,
+      "p_aux": 0,
+      "s_index_elements": 768,
+      "t_index_sec": 0.01880034990608692,
+      "t_query": 0.00023245112970471382,
+      "t_gallery": 0.03131960518658161,
+      "t_argmax": 8.264090865850449e-06,
+      "t_e2e": 0.031550764106214046,
+      "peak_rss_mib": 3.14453125,
+      "peak_vram_mib": 0.0
+    },
+    {
+      "method": "neutraj",
+      "n_gallery": 32,
+      "gallery_batch": 32,
+      "hydra_tail": 64,
+      "device": "cpu",
+      "p_total": 268544,
+      "p_model": 268544,
+      "p_aux": 0,
+      "s_index_elements": 4096,
+      "t_index_sec": 0.0854894733056426,
+      "t_query": 0.0022908891551196575,
+      "t_gallery": 0.004185840021818876,
+      "t_argmax": 8.347909897565842e-06,
+      "t_e2e": 0.006482665427029133,
+      "peak_rss_mib": 0.1953125,
+      "peak_vram_mib": 0.0
+    },
+    {
+      "method": "dan",
+      "n_gallery": 32,
+      "gallery_batch": 32,
+      "hydra_tail": 64,
+      "device": "cpu",
+      "p_total": 200833,
+      "p_model": 200833,
+      "p_aux": 0,
+      "s_index_elements": 4096,
+      "t_index_sec": 0.06936659617349505,
+      "t_query": 0.0021180440671741962,
+      "t_gallery": 0.012878775130957365,
+      "t_argmax": 8.547678589820862e-06,
+      "t_e2e": 0.014974784106016159,
+      "peak_rss_mib": 3.07421875,
+      "peak_vram_mib": 0.0
+    },
+    {
+      "method": "mod4",
+      "n_gallery": 32,
+      "gallery_batch": 32,
+      "hydra_tail": 64,
+      "device": "cpu",
+      "p_total": 3659013,
+      "p_model": 3659013,
+      "p_aux": 0,
+      "s_index_elements": 16896,
+      "t_index_sec": 5.822929805144668,
+      "t_query": 0.16458804812282324,
+      "t_gallery": 0.11576172709465027,
+      "t_argmax": 9.467825293540955e-06,
+      "t_e2e": 0.2767200553789735,
+      "peak_rss_mib": 35.4140625,
+      "peak_vram_mib": 0.0
+    }
+  ]
+}

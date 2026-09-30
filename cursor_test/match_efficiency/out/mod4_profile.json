@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "online_preprocess_sec": 0.0006326008588075638,
+      "online_query_diffusion_sec": 0.05138670792803168,
+      "online_query_unet_calls": 16,
+      "online_gallery_h2d_sec": 0.00015035690739750862,
+      "online_tail_select_sec": 3.4670811146497726e-05,
+      "online_match_forward_sec": 0.042475884314626455,
+      "online_argmax_sec": 0.007087576203048229,
+      "online_gallery_total_sec": 0.04266091203317046,
+      "online_e2e_sec": 0.10176779702305794,
+      "peak_vram_mib": 498.2265625,
+      "n_gallery": 500,
+      "gallery_batch": 500,
+      "hydra_tail": 10,
+      "k_select_vanilla": 10,
+      "k_select_rl": 4,
+      "diffusion_steps": 16,
+      "offline_index_total_sec": 2.7540217018686235
+    }
+  ]
+}

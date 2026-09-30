@@ -1,0 +1,216 @@
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/cuda/__init__.py:54: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[sweep] offline index dtw N=1000 ...
+  t_index=0.1s
+[sweep] offline index hausdorff N=1000 ...
+  t_index=0.1s
+[sweep] offline index frechet N=1000 ...
+  t_index=0.1s
+[sweep] offline index sspd N=1000 ...
+  t_index=0.1s
+[sweep] offline index t3s N=1000 ...
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+  t_index=0.3s
+[sweep] offline index traj2simvec N=1000 ...
+  t_index=0.1s
+[sweep] offline index neutraj N=1000 ...
+/home/jh/sjn/traj_match/cursor_baseline/model_lib/neutraj/geo_rnns/memory.py:104: UserWarning: nn.init.constant is now deprecated in favor of nn.init.constant_.
+  nn.init.constant(self.memory, 0.0)
+  t_index=3.8s
+[sweep] offline index trajgat N=1000 ...
+  t_index=28.9s
+[sweep] offline index trajcl N=1000 ...
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+  t_index=0.5s
+[sweep] offline index st2vec N=1000 ...
+  t_index=1.4s
+[sweep] offline index dan N=1000 ...
+  t_index=0.1s
+[sweep] offline index tat N=1000 ...
+  t_index=0.1s
+[sweep] offline index attnmove N=1000 ...
+  t_index=2.1s
+[sweep] offline index mod4 N=1000 ...
+  t_index=0.2s
+
+=== online N=100 gallery_batch=100 ===
+  dtw ... T_e2e=0.017s (q=0.000 gal=0.017)
+  hausdorff ... T_e2e=0.001s (q=0.000 gal=0.000)
+  frechet ... T_e2e=0.017s (q=0.000 gal=0.017)
+  sspd ... T_e2e=0.004s (q=0.000 gal=0.003)
+  t3s ... /home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+T_e2e=0.061s (q=0.004 gal=0.057)
+  traj2simvec ... T_e2e=0.060s (q=0.003 gal=0.057)
+  neutraj ... /home/jh/sjn/traj_match/cursor_baseline/model_lib/neutraj/geo_rnns/memory.py:104: UserWarning: nn.init.constant is now deprecated in favor of nn.init.constant_.
+  nn.init.constant(self.memory, 0.0)
+T_e2e=0.296s (q=0.046 gal=0.250)
+  trajgat ... T_e2e=1.058s (q=0.043 gal=1.016)
+  trajcl ... /home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/functional.py:5109: UserWarning: Support for mismatched src_key_padding_mask and mask is deprecated. Use same type for both instead.
+  warnings.warn(
+T_e2e=0.133s (q=0.009 gal=0.124)
+  st2vec ... T_e2e=0.272s (q=0.008 gal=0.263)
+  dan ... T_e2e=0.072s (q=0.004 gal=0.069)
+  tat ... T_e2e=0.073s (q=0.004 gal=0.069)
+  attnmove ... T_e2e=0.084s (q=0.025 gal=0.059)
+  mod4 ... T_e2e=0.046s (q=0.008 gal=0.038)
+
+=== online N=200 gallery_batch=200 ===
+  dtw ... T_e2e=0.035s (q=0.000 gal=0.034)
+  hausdorff ... T_e2e=0.001s (q=0.000 gal=0.000)
+  frechet ... T_e2e=0.035s (q=0.000 gal=0.035)
+  sspd ... T_e2e=0.004s (q=0.000 gal=0.004)
+  t3s ... /home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+T_e2e=0.144s (q=0.004 gal=0.140)
+  traj2simvec ... T_e2e=0.145s (q=0.003 gal=0.141)
+  neutraj ... /home/jh/sjn/traj_match/cursor_baseline/model_lib/neutraj/geo_rnns/memory.py:104: UserWarning: nn.init.constant is now deprecated in favor of nn.init.constant_.
+  nn.init.constant(self.memory, 0.0)
+T_e2e=0.499s (q=0.046 gal=0.453)
+  trajgat ... T_e2e=1.815s (q=0.037 gal=1.778)
+  trajcl ... /home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/functional.py:5109: UserWarning: Support for mismatched src_key_padding_mask and mask is deprecated. Use same type for both instead.
+  warnings.warn(
+T_e2e=0.199s (q=0.008 gal=0.191)
+  st2vec ... T_e2e=0.418s (q=0.007 gal=0.411)
+  dan ... T_e2e=0.114s (q=0.004 gal=0.110)
+  tat ... T_e2e=0.113s (q=0.004 gal=0.109)
+  attnmove ... T_e2e=0.112s (q=0.020 gal=0.092)
+  mod4 ... T_e2e=0.080s (q=0.006 gal=0.074)
+
+=== online N=500 gallery_batch=500 ===
+  dtw ... T_e2e=0.083s (q=0.000 gal=0.083)
+  hausdorff ... T_e2e=0.001s (q=0.000 gal=0.001)
+  frechet ... T_e2e=0.083s (q=0.000 gal=0.082)
+  sspd ... T_e2e=0.005s (q=0.000 gal=0.005)
+  t3s ... /home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+T_e2e=0.273s (q=0.003 gal=0.270)
+  traj2simvec ... T_e2e=0.276s (q=0.003 gal=0.273)
+  neutraj ... /home/jh/sjn/traj_match/cursor_baseline/model_lib/neutraj/geo_rnns/memory.py:104: UserWarning: nn.init.constant is now deprecated in favor of nn.init.constant_.
+  nn.init.constant(self.memory, 0.0)
+T_e2e=1.106s (q=0.046 gal=1.060)
+  trajgat ... T_e2e=4.961s (q=0.043 gal=4.917)
+  trajcl ... /home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/functional.py:5109: UserWarning: Support for mismatched src_key_padding_mask and mask is deprecated. Use same type for both instead.
+  warnings.warn(
+T_e2e=0.589s (q=0.009 gal=0.578)
+  st2vec ... T_e2e=1.064s (q=0.008 gal=1.055)
+  dan ... T_e2e=0.274s (q=0.004 gal=0.270)
+  tat ... T_e2e=0.277s (q=0.004 gal=0.273)
+  attnmove ... T_e2e=0.249s (q=0.020 gal=0.230)
+  mod4 ... T_e2e=0.320s (q=0.006 gal=0.314)
+
+=== online N=1000 gallery_batch=512 ===
+  dtw ... T_e2e=0.169s (q=0.000 gal=0.168)
+  hausdorff ... T_e2e=0.001s (q=0.000 gal=0.001)
+  frechet ... T_e2e=0.168s (q=0.000 gal=0.168)
+  sspd ... T_e2e=0.008s (q=0.000 gal=0.008)
+  t3s ... /home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+T_e2e=0.549s (q=0.003 gal=0.546)
+  traj2simvec ... T_e2e=0.552s (q=0.003 gal=0.549)
+  neutraj ... /home/jh/sjn/traj_match/cursor_baseline/model_lib/neutraj/geo_rnns/memory.py:104: UserWarning: nn.init.constant is now deprecated in favor of nn.init.constant_.
+  nn.init.constant(self.memory, 0.0)
+T_e2e=2.190s (q=0.046 gal=2.143)
+  trajgat ... T_e2e=9.087s (q=0.038 gal=9.050)
+  trajcl ... /home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/functional.py:5109: UserWarning: Support for mismatched src_key_padding_mask and mask is deprecated. Use same type for both instead.
+  warnings.warn(
+T_e2e=0.943s (q=0.008 gal=0.936)
+  st2vec ... T_e2e=2.069s (q=0.007 gal=2.061)
+  dan ... T_e2e=0.546s (q=0.004 gal=0.542)
+  tat ... T_e2e=0.547s (q=0.004 gal=0.543)
+  attnmove ... T_e2e=0.484s (q=0.020 gal=0.463)
+  mod4 ... T_e2e=0.637s (q=0.006 gal=0.631)
+
+Wrote cursor_test/match_efficiency/out/sweep_full14_online.json
+Wrote cursor_test/match_efficiency/out/sweep_full14_online.md
+# Gallery size sweep — 14 methods (scratch, no ckpt)
+
+13 baselines + cursor_mod_4. Online `T_e2e` = `T_query` + `T_gallery`.
+Gallery encode/diffusion counted in **online** `T_gallery`.
+
+## T_e2e (s)
+
+| method | 100 | 200 | 500 | 1000 |
+|---|---:|---:|---:|---:|
+| dtw | 0.0171 | 0.0347 | 0.0835 | 0.1686 |
+| hausdorff | 0.0007 | 0.0008 | 0.0008 | 0.0012 |
+| frechet | 0.0175 | 0.0351 | 0.0827 | 0.1680 |
+| sspd | 0.0035 | 0.0042 | 0.0049 | 0.0081 |
+| t3s | 0.0606 | 0.1439 | 0.2730 | 0.5495 |
+| traj2simvec | 0.0601 | 0.1447 | 0.2759 | 0.5521 |
+| neutraj | 0.2964 | 0.4987 | 1.1057 | 2.1904 |
+| trajgat | 1.0584 | 1.8152 | 4.9614 | 9.0867 |
+| trajcl | 0.1334 | 0.1990 | 0.5886 | 0.9434 |
+| st2vec | 0.2717 | 0.4181 | 1.0637 | 2.0694 |
+| dan | 0.0724 | 0.1144 | 0.2741 | 0.5463 |
+| tat | 0.0728 | 0.1130 | 0.2768 | 0.5471 |
+| attnmove | 0.0836 | 0.1115 | 0.2494 | 0.4838 |
+| mod4 | 0.0460 | 0.0798 | 0.3205 | 0.6373 |
+
+## T_query (s)
+
+| method | 100 | 200 | 500 | 1000 |
+|---|---:|---:|---:|---:|
+| dtw | 0.0002 | 0.0002 | 0.0002 | 0.0002 |
+| hausdorff | 0.0003 | 0.0003 | 0.0003 | 0.0003 |
+| frechet | 0.0002 | 0.0003 | 0.0002 | 0.0002 |
+| sspd | 0.0003 | 0.0003 | 0.0003 | 0.0002 |
+| t3s | 0.0035 | 0.0039 | 0.0030 | 0.0031 |
+| traj2simvec | 0.0030 | 0.0033 | 0.0033 | 0.0033 |
+| neutraj | 0.0465 | 0.0459 | 0.0456 | 0.0460 |
+| trajgat | 0.0435 | 0.0372 | 0.0429 | 0.0380 |
+| trajcl | 0.0095 | 0.0076 | 0.0093 | 0.0080 |
+| st2vec | 0.0085 | 0.0075 | 0.0084 | 0.0073 |
+| dan | 0.0038 | 0.0036 | 0.0036 | 0.0041 |
+| tat | 0.0038 | 0.0037 | 0.0037 | 0.0037 |
+| attnmove | 0.0249 | 0.0197 | 0.0199 | 0.0198 |
+| mod4 | 0.0076 | 0.0061 | 0.0061 | 0.0063 |
+
+## T_gallery (s)
+
+| method | 100 | 200 | 500 | 1000 |
+|---|---:|---:|---:|---:|
+| dtw | 0.0169 | 0.0344 | 0.0833 | 0.1683 |
+| hausdorff | 0.0004 | 0.0005 | 0.0005 | 0.0009 |
+| frechet | 0.0173 | 0.0349 | 0.0824 | 0.1678 |
+| sspd | 0.0032 | 0.0039 | 0.0046 | 0.0078 |
+| t3s | 0.0570 | 0.1400 | 0.2699 | 0.5464 |
+| traj2simvec | 0.0570 | 0.1409 | 0.2730 | 0.5487 |
+| neutraj | 0.2505 | 0.4528 | 1.0599 | 2.1431 |
+| trajgat | 1.0158 | 1.7779 | 4.9170 | 9.0495 |
+| trajcl | 0.1241 | 0.1913 | 0.5780 | 0.9358 |
+| st2vec | 0.2632 | 0.4106 | 1.0552 | 2.0612 |
+| dan | 0.0686 | 0.1104 | 0.2705 | 0.5422 |
+| tat | 0.0690 | 0.1093 | 0.2727 | 0.5430 |
+| attnmove | 0.0587 | 0.0918 | 0.2297 | 0.4629 |
+| mod4 | 0.0384 | 0.0737 | 0.3144 | 0.6311 |
+
+## VRAM (MiB)
+
+| method | 100 | 200 | 500 | 1000 |
+|---|---:|---:|---:|---:|
+| dtw | 12626.9194 | 12640.1016 | 12640.1094 | 12640.1328 |
+| hausdorff | 12626.9194 | 12640.1016 | 12640.1094 | 12640.1328 |
+| frechet | 12626.9194 | 12640.1016 | 12640.1094 | 12640.1328 |
+| sspd | 12626.9194 | 12640.1016 | 12640.1094 | 12640.1328 |
+| t3s | 12657.5884 | 12662.7017 | 12662.8774 | 12663.1968 |
+| traj2simvec | 12655.1250 | 12660.7539 | 12662.4766 | 12665.5459 |
+| neutraj | 12636.9746 | 12642.0776 | 12642.2456 | 12642.5415 |
+| trajgat | 12638.4351 | 12643.5234 | 12643.7051 | 12643.9219 |
+| trajcl | 12639.6338 | 12645.3164 | 12645.4297 | 12645.7803 |
+| st2vec | 12834.9097 | 12834.9648 | 12835.1299 | 12835.3555 |
+| dan | 13058.6514 | 13058.7153 | 13058.9067 | 13059.1792 |
+| tat | 13058.6514 | 13058.7153 | 13058.9067 | 13059.1792 |
+| attnmove | 12641.9087 | 12641.9165 | 12641.9399 | 12641.9165 |
+| mod4 | 12704.6602 | 12768.6606 | 12958.9150 | 12966.5176 |
+

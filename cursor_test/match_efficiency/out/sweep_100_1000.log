@@ -1,0 +1,177 @@
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/cuda/__init__.py:54: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[sweep] offline index dtw N=1000 ...
+  t_index=0.4s
+[sweep] offline index hausdorff N=1000 ...
+  t_index=0.2s
+[sweep] offline index frechet N=1000 ...
+  t_index=0.2s
+[sweep] offline index sspd N=1000 ...
+  t_index=0.2s
+[sweep] offline index t3s N=1000 ...
+  t_index=1.5s
+[sweep] offline index traj2simvec N=1000 ...
+  t_index=0.5s
+[sweep] offline index neutraj N=1000 ...
+  t_index=0.6s
+[sweep] offline index trajgat N=1000 ...
+  t_index=0.8s
+[sweep] offline index trajcl N=1000 ...
+  t_index=1.8s
+[sweep] offline index st2vec N=1000 ...
+  t_index=0.9s
+[sweep] offline index dan N=1000 ...
+  t_index=0.6s
+[sweep] offline index tat N=1000 ...
+  t_index=0.6s
+[sweep] offline index attnmove N=1000 ...
+  t_index=0.2s
+[sweep] offline index mod4 N=1000 ...
+  t_index=4.1s
+
+=== online N=100 gallery_batch=100 ===
+  dtw ... T_e2e=0.024s (q=0.000 gal=0.024)
+  hausdorff ... T_e2e=0.001s (q=0.000 gal=0.000)
+  frechet ... T_e2e=0.024s (q=0.000 gal=0.023)
+  sspd ... T_e2e=0.002s (q=0.000 gal=0.001)
+  t3s ... T_e2e=0.002s (q=0.002 gal=0.000)
+  traj2simvec ... T_e2e=0.001s (q=0.001 gal=0.000)
+  neutraj ... T_e2e=0.001s (q=0.001 gal=0.000)
+  trajgat ... T_e2e=0.001s (q=0.001 gal=0.000)
+  trajcl ... T_e2e=0.002s (q=0.001 gal=0.000)
+  st2vec ... T_e2e=0.001s (q=0.001 gal=0.000)
+  dan ... T_e2e=0.001s (q=0.001 gal=0.000)
+  tat ... T_e2e=0.001s (q=0.001 gal=0.000)
+  attnmove ... T_e2e=0.001s (q=0.001 gal=0.000)
+  mod4 ... T_e2e=0.033s (q=0.025 gal=0.008)
+
+=== online N=200 gallery_batch=200 ===
+  dtw ... T_e2e=0.024s (q=0.000 gal=0.023)
+  hausdorff ... T_e2e=0.001s (q=0.000 gal=0.000)
+  frechet ... T_e2e=0.024s (q=0.000 gal=0.023)
+  sspd ... T_e2e=0.001s (q=0.000 gal=0.001)
+  t3s ... T_e2e=0.002s (q=0.002 gal=0.000)
+  traj2simvec ... T_e2e=0.001s (q=0.001 gal=0.000)
+  neutraj ... T_e2e=0.001s (q=0.001 gal=0.000)
+  trajgat ... T_e2e=0.001s (q=0.001 gal=0.000)
+  trajcl ... T_e2e=0.002s (q=0.001 gal=0.000)
+  st2vec ... T_e2e=0.001s (q=0.001 gal=0.000)
+  dan ... T_e2e=0.001s (q=0.001 gal=0.000)
+  tat ... T_e2e=0.001s (q=0.001 gal=0.000)
+  attnmove ... T_e2e=0.001s (q=0.001 gal=0.000)
+  mod4 ... T_e2e=0.039s (q=0.025 gal=0.013)
+
+=== online N=500 gallery_batch=500 ===
+  dtw ... T_e2e=0.024s (q=0.000 gal=0.023)
+  hausdorff ... T_e2e=0.001s (q=0.000 gal=0.001)
+  frechet ... T_e2e=0.024s (q=0.000 gal=0.024)
+  sspd ... T_e2e=0.001s (q=0.000 gal=0.001)
+  t3s ... T_e2e=0.002s (q=0.002 gal=0.000)
+  traj2simvec ... T_e2e=0.001s (q=0.001 gal=0.000)
+  neutraj ... T_e2e=0.001s (q=0.001 gal=0.000)
+  trajgat ... T_e2e=0.001s (q=0.001 gal=0.000)
+  trajcl ... T_e2e=0.002s (q=0.001 gal=0.000)
+  st2vec ... T_e2e=0.001s (q=0.001 gal=0.000)
+  dan ... T_e2e=0.001s (q=0.001 gal=0.000)
+  tat ... T_e2e=0.001s (q=0.001 gal=0.000)
+  attnmove ... T_e2e=0.001s (q=0.001 gal=0.000)
+  mod4 ... T_e2e=0.060s (q=0.026 gal=0.034)
+
+=== online N=1000 gallery_batch=512 ===
+  dtw ... T_e2e=0.046s (q=0.000 gal=0.046)
+  hausdorff ... T_e2e=0.001s (q=0.000 gal=0.001)
+  frechet ... T_e2e=0.046s (q=0.000 gal=0.046)
+  sspd ... T_e2e=0.002s (q=0.000 gal=0.002)
+  t3s ... T_e2e=0.002s (q=0.002 gal=0.000)
+  traj2simvec ... T_e2e=0.001s (q=0.001 gal=0.000)
+  neutraj ... T_e2e=0.001s (q=0.001 gal=0.000)
+  trajgat ... T_e2e=0.001s (q=0.001 gal=0.000)
+  trajcl ... T_e2e=0.002s (q=0.001 gal=0.000)
+  st2vec ... T_e2e=0.001s (q=0.001 gal=0.000)
+  dan ... T_e2e=0.003s (q=0.001 gal=0.001)
+  tat ... T_e2e=0.001s (q=0.001 gal=0.001)
+  attnmove ... T_e2e=0.002s (q=0.001 gal=0.000)
+  mod4 ... T_e2e=0.094s (q=0.025 gal=0.069)
+
+Wrote cursor_test/match_efficiency/out/sweep_100_1000.json
+Wrote cursor_test/match_efficiency/out/sweep_100_1000.md
+# Gallery size sweep — 14 methods (scratch, no ckpt)
+
+13 baselines + cursor_mod_4. Online `T_e2e` = `T_query` + `T_gallery`.
+
+## T_e2e (s)
+
+| method | 100 | 200 | 500 | 1000 |
+|---|---:|---:|---:|---:|
+| dtw | 0.0242 | 0.0236 | 0.0236 | 0.0463 |
+| hausdorff | 0.0009 | 0.0007 | 0.0008 | 0.0011 |
+| frechet | 0.0237 | 0.0237 | 0.0238 | 0.0464 |
+| sspd | 0.0017 | 0.0015 | 0.0015 | 0.0024 |
+| t3s | 0.0023 | 0.0020 | 0.0020 | 0.0020 |
+| traj2simvec | 0.0010 | 0.0011 | 0.0010 | 0.0010 |
+| neutraj | 0.0012 | 0.0012 | 0.0012 | 0.0012 |
+| trajgat | 0.0014 | 0.0014 | 0.0014 | 0.0014 |
+| trajcl | 0.0016 | 0.0016 | 0.0016 | 0.0016 |
+| st2vec | 0.0015 | 0.0014 | 0.0014 | 0.0014 |
+| dan | 0.0011 | 0.0011 | 0.0011 | 0.0026 |
+| tat | 0.0010 | 0.0011 | 0.0011 | 0.0014 |
+| attnmove | 0.0015 | 0.0014 | 0.0014 | 0.0015 |
+| mod4 | 0.0330 | 0.0388 | 0.0603 | 0.0944 |
+
+## T_query (s)
+
+| method | 100 | 200 | 500 | 1000 |
+|---|---:|---:|---:|---:|
+| dtw | 0.0003 | 0.0003 | 0.0003 | 0.0003 |
+| hausdorff | 0.0003 | 0.0003 | 0.0003 | 0.0003 |
+| frechet | 0.0003 | 0.0003 | 0.0003 | 0.0003 |
+| sspd | 0.0003 | 0.0003 | 0.0003 | 0.0003 |
+| t3s | 0.0019 | 0.0016 | 0.0016 | 0.0016 |
+| traj2simvec | 0.0006 | 0.0007 | 0.0006 | 0.0006 |
+| neutraj | 0.0008 | 0.0007 | 0.0008 | 0.0008 |
+| trajgat | 0.0010 | 0.0010 | 0.0010 | 0.0010 |
+| trajcl | 0.0012 | 0.0012 | 0.0012 | 0.0013 |
+| st2vec | 0.0011 | 0.0010 | 0.0010 | 0.0010 |
+| dan | 0.0007 | 0.0007 | 0.0007 | 0.0009 |
+| tat | 0.0006 | 0.0007 | 0.0007 | 0.0009 |
+| attnmove | 0.0012 | 0.0011 | 0.0011 | 0.0013 |
+| mod4 | 0.0254 | 0.0254 | 0.0260 | 0.0253 |
+
+## T_gallery (s)
+
+| method | 100 | 200 | 500 | 1000 |
+|---|---:|---:|---:|---:|
+| dtw | 0.0237 | 0.0233 | 0.0233 | 0.0459 |
+| hausdorff | 0.0005 | 0.0004 | 0.0005 | 0.0007 |
+| frechet | 0.0234 | 0.0233 | 0.0235 | 0.0461 |
+| sspd | 0.0013 | 0.0011 | 0.0012 | 0.0021 |
+| t3s | 0.0004 | 0.0004 | 0.0004 | 0.0004 |
+| traj2simvec | 0.0004 | 0.0004 | 0.0004 | 0.0004 |
+| neutraj | 0.0004 | 0.0004 | 0.0004 | 0.0004 |
+| trajgat | 0.0004 | 0.0004 | 0.0004 | 0.0004 |
+| trajcl | 0.0004 | 0.0004 | 0.0004 | 0.0004 |
+| st2vec | 0.0004 | 0.0004 | 0.0004 | 0.0004 |
+| dan | 0.0004 | 0.0004 | 0.0004 | 0.0010 |
+| tat | 0.0004 | 0.0004 | 0.0004 | 0.0005 |
+| attnmove | 0.0002 | 0.0002 | 0.0002 | 0.0002 |
+| mod4 | 0.0076 | 0.0133 | 0.0345 | 0.0691 |
+
+## VRAM (MiB)
+
+| method | 100 | 200 | 500 | 1000 |
+|---|---:|---:|---:|---:|
+| dtw | 44.2573 | 44.3696 | 44.7070 | 44.7217 |
+| hausdorff | 44.2139 | 44.2832 | 44.4912 | 44.5010 |
+| frechet | 44.2578 | 44.3706 | 44.7090 | 44.7236 |
+| sspd | 44.5625 | 44.9785 | 46.2261 | 46.2764 |
+| t3s | 60.8364 | 60.8364 | 60.8364 | 60.8364 |
+| traj2simvec | 52.4360 | 52.4360 | 52.4360 | 52.4360 |
+| neutraj | 60.6709 | 60.6709 | 60.6709 | 60.6709 |
+| trajgat | 45.1733 | 45.1733 | 45.1733 | 45.1733 |
+| trajcl | 52.6323 | 52.6323 | 52.6323 | 52.6323 |
+| st2vec | 45.1733 | 45.1733 | 45.1733 | 45.1733 |
+| dan | 60.6704 | 60.6704 | 60.6704 | 60.6704 |
+| tat | 60.6704 | 60.6704 | 60.6704 | 60.6704 |
+| attnmove | 45.1797 | 45.1797 | 45.1797 | 45.8379 |
+| mod4 | 140.2002 | 235.2549 | 519.3271 | 530.8857 |
+

@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "gallery_size": 64,
+    "n_queries": 1
+  },
+  "rows": [
+    {
+      "method": "attnmove",
+      "n_gallery": 64,
+      "gallery_batch": 64,
+      "hydra_tail": 10,
+      "device": "cuda:0",
+      "p_total": 1334831,
+      "p_model": 1021232,
+      "p_aux": 313599,
+      "s_index_elements": 1536,
+      "t_index_sec": 12.881333218887448,
+      "t_query": 1.0414452753029764,
+      "t_gallery": 0.0770072159357369,
+      "t_argmax": 1.2962613254785538e-05,
+      "t_e2e": 1.118465453851968,
+      "peak_rss_mib": 339.59765625,
+      "peak_vram_mib": 85.4619140625
+    },
+    {
+      "method": "mod4",
+      "n_gallery": 64,
+      "gallery_batch": 64,
+      "hydra_tail": 10,
+      "device": "cuda:0",
+      "p_total": 3659013,
+      "p_model": 3659013,
+      "p_aux": 0,
+      "s_index_elements": 6144,
+      "t_index_sec": 0.7609938192181289,
+      "t_query": 0.0462607080116868,
+      "t_gallery": 0.01503790495917201,
+      "t_argmax": 1.6751233488321304e-05,
+      "t_e2e": 0.061315364204347134,
+      "peak_rss_mib": 22.3359375,
+      "peak_vram_mib": 83.78466796875
+    }
+  ]
+}

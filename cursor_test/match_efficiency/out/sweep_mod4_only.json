@@ -1,0 +1,86 @@
+{
+  "meta": {
+    "scratch_models": true,
+    "no_ckpt_load": true,
+    "methods": [
+      "mod4"
+    ],
+    "n_methods": 1,
+    "gallery_index": "online gallery encode/diffusion in T_gallery",
+    "gallery_online": true,
+    "sizes": [
+      100,
+      200,
+      500,
+      1000
+    ],
+    "device": "cuda:0",
+    "n_queries": 3
+  },
+  "rows": [
+    {
+      "method": "mod4",
+      "n_gallery": 100,
+      "gallery_batch": 100,
+      "p_total": 3265285,
+      "gallery_online": true,
+      "t_index_sec": 0.3896,
+      "t_index_amortized": 0.00039,
+      "s_index_elements": 1600,
+      "t_query": 0.006477,
+      "t_gallery": 0.03827,
+      "t_argmax": 1.6e-05,
+      "t_e2e": 0.044763,
+      "peak_rss_mib": 0.0,
+      "peak_vram_mib": 86.101074
+    },
+    {
+      "method": "mod4",
+      "n_gallery": 200,
+      "gallery_batch": 200,
+      "p_total": 3265285,
+      "gallery_online": true,
+      "t_index_sec": 0.3896,
+      "t_index_amortized": 0.00039,
+      "s_index_elements": 3200,
+      "t_query": 0.006083,
+      "t_gallery": 0.073701,
+      "t_argmax": 1.7e-05,
+      "t_e2e": 0.0798,
+      "peak_rss_mib": 0.0,
+      "peak_vram_mib": 150.09375
+    },
+    {
+      "method": "mod4",
+      "n_gallery": 500,
+      "gallery_batch": 500,
+      "p_total": 3265285,
+      "gallery_online": true,
+      "t_index_sec": 0.3896,
+      "t_index_amortized": 0.00039,
+      "s_index_elements": 8000,
+      "t_query": 0.006132,
+      "t_gallery": 0.316879,
+      "t_argmax": 1.7e-05,
+      "t_e2e": 0.323028,
+      "peak_rss_mib": 0.0,
+      "peak_vram_mib": 339.461426
+    },
+    {
+      "method": "mod4",
+      "n_gallery": 1000,
+      "gallery_batch": 512,
+      "p_total": 3265285,
+      "gallery_online": true,
+      "t_index_sec": 0.3896,
+      "t_index_amortized": 0.00039,
+      "s_index_elements": 16000,
+      "t_query": 0.006623,
+      "t_gallery": 0.630528,
+      "t_argmax": 1.8e-05,
+      "t_e2e": 0.63712,
+      "peak_rss_mib": 0.0,
+      "peak_vram_mib": 346.993652
+    }
+  ]
+}

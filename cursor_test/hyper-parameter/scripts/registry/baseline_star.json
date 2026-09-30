@@ -1,0 +1,23 @@
+{
+  "description": "P0 baseline_star — Shenzhen v2, all hyperparams at ★ tier",
+  "pairs_pkl": "cursor_mod_4/pipeline/all_pairs_v2_maxdtw.pkl",
+  "hyper": {
+    "T": 200,
+    "unet_dim": 512,
+    "num_res_blocks": 2,
+    "lambda_x0": 0.0,
+    "hydra_tail": 64,
+    "k_select": 16,
+    "match_dim": 128,
+    "rl_lr": 0.0001
+  },
+  "artifacts": {
+    "diff_pre": "cursor_mod_runs/diff_ft_pairs131_meters_84/best_pre_ep289_rmse5.908m.pth",
+    "diff_post": "cursor_mod_runs/diff_ft_pairs131_meters_84/best_post_ep242_rmse4.678m.pth",
+    "diff_pretrain_pre": "cursor_mod_4/pretrain/file/model_para_diff_pre131.17892456.pth",
+    "diff_pretrain_post": "cursor_mod_4/pretrain/file/model_para_diff_post131.17892456.pth",
+    "cache": "cursor_test/hyper-parameter/scripts/registry/hydra_only_cache_84.pt",
+    "match": "cursor_mod_runs/match_ft_84/best_match_s4_ep41_acc0.1590.pth",
+    "rl_selector": "cursor_mod_runs/rl_tail_select_s4_84/best_selector_k16_acc0.1498_ep20.pt"
+  }
+}

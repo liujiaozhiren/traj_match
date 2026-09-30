@@ -300,6 +300,9 @@ class TrajCLOfficialBaseline(nn.Module):
             if len(c) == 0:
                 c = (0,)
                 p = [t[0]] if t else [[cs.x_min, cs.y_min]]
+            if len(c) == 1:
+                c = (c[0], c[0])
+                p = list(p) + [p[0]]
             emb_cell.append(self._cells_to_emb_seq(c, device))
             emb_sp.append(torch.tensor(trajcl_traj.generate_spatial_features(p, cs), dtype=torch.float32, device=device))
         trajs_emb = pad_sequence(emb_cell, batch_first=False)

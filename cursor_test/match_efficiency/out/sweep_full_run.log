@@ -1,0 +1,63 @@
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/cuda/__init__.py:54: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[sweep] offline index t3s N=1000 ...
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+  t_index=1.0s
+[sweep] offline index traj2simvec N=1000 ...
+  t_index=0.5s
+[sweep] offline index neutraj N=1000 ...
+  t_index=0.6s
+[sweep] offline index trajgat N=1000 ...
+  t_index=41.3s
+[sweep] offline index trajcl N=1000 ...
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/functional.py:5109: UserWarning: Support for mismatched src_key_padding_mask and mask is deprecated. Use same type for both instead.
+  warnings.warn(
+  t_index=1.4s
+[sweep] offline index st2vec N=1000 ...
+  t_index=3.5s
+[sweep] offline index dan N=1000 ...
+  t_index=0.5s
+[sweep] offline index tat N=1000 ...
+  t_index=0.5s
+[sweep] offline index attnmove N=1000 ...
+  t_index=2.2s
+[sweep] offline index mod4 N=1000 ...
+  t_index=4.0s
+
+=== online N=100 gallery_batch=100 ===
+  t3s ... /home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+T_e2e=0.004s (q=0.004 gal=0.000)
+  traj2simvec ... T_e2e=0.002s (q=0.001 gal=0.000)
+  neutraj ... T_e2e=0.003s (q=0.002 gal=0.000)
+  trajgat ... T_e2e=0.038s (q=0.038 gal=0.000)
+  trajcl ... /home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/nn/modules/transformer.py:286: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(f"enable_nested_tensor is True, but self.use_nested_tensor is False because {why_not_sparsity_fast_path}")
+Traceback (most recent call last):
+  File "/home/jh/sjn/traj_match/cursor_test/match_efficiency/run_sweep_sizes.py", line 165, in <module>
+    main()
+  File "/home/jh/sjn/traj_match/cursor_test/match_efficiency/run_sweep_sizes.py", line 86, in main
+    timing = run_retrieval_median(
+  File "/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/jh/sjn/traj_match/cursor_test/match_efficiency/retrieval.py", line 117, in run_retrieval_median
+    _, t = run_retrieval_e2e(
+  File "/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/jh/sjn/traj_match/cursor_test/match_efficiency/retrieval.py", line 41, in run_retrieval_e2e
+    qstate = encode_query(
+  File "/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/jh/sjn/traj_match/cursor_test/match_efficiency/baseline_pipelines.py", line 350, in encode_query
+    return {"z_q": model.encode_pre(pre.unsqueeze(0)).squeeze(0)}
+  File "/home/jh/sjn/traj_match/cursor_baseline/trajcl_official.py", line 327, in encode_pre
+    return self._encode_lonlat_batch(pre)
+  File "/home/jh/sjn/traj_match/cursor_baseline/trajcl_official.py", line 324, in _encode_lonlat_batch
+    return self.core.interpret(te, tep, tl)
+  File "/home/jh/sjn/traj_match/cursor_baseline/model_lib/vendor_TrajCL/model/trajcl.py", line 61, in interpret
+    src_padding_mask1 = torch.arange(max_trajs1_len, device = Config.device)[None, :] >= trajs1_len[:, None]
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+ERROR conda.cli.main_run:execute(47): `conda run python cursor_test/match_efficiency/run_sweep_sizes.py --sizes 100,200,500,1000 --methods t3s,traj2simvec,neutraj,trajgat,trajcl,st2vec,dan,tat,attnmove,mod4 --device cuda:0 --n-queries 3 --output-json cursor_test/match_efficiency/out/sweep_full_100_1000.json --output-md cursor_test/match_efficiency/out/sweep_full_100_1000.md` failed. (See above for error)

@@ -1,0 +1,28 @@
+/home/jh/anaconda3/envs/traj_match/lib/python3.10/site-packages/torch/cuda/__init__.py:54: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+
+=== N=100 gallery_batch=100 ===
+  dtw ... T_e2e=0.018s
+  neutraj ... T_e2e=0.001s
+  dan ... T_e2e=0.001s
+  tat ... T_e2e=0.001s
+  attnmove ... T_e2e=0.002s
+  mod4 ... T_e2e=0.089s
+  mod4_rl ... T_e2e=0.090s
+
+=== N=200 gallery_batch=200 ===
+  dtw ... T_e2e=0.024s
+  neutraj ... T_e2e=0.001s
+  dan ... T_e2e=0.001s
+  tat ... T_e2e=0.001s
+  attnmove ... T_e2e=0.001s
+  mod4 ... T_e2e=0.098s
+  mod4_rl ... T_e2e=0.099s
+
+=== N=500 gallery_batch=500 ===
+  dtw ... T_e2e=0.024s
+  neutraj ... T_e2e=0.001s
+  dan ... T_e2e=0.001s
+  tat ... T_e2e=0.001s
+  attnmove ... T_e2e=0.001s
+  mod4 ... Terminated

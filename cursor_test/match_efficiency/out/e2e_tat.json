@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "gallery_size": 16,
+    "n_queries": 1
+  },
+  "rows": [
+    {
+      "method": "tat_graph",
+      "n_gallery": 16,
+      "gallery_batch": 16,
+      "hydra_tail": 64,
+      "device": "cpu",
+      "p_total": 401409,
+      "p_model": 401409,
+      "p_aux": 0,
+      "s_index_elements": 2048,
+      "t_index_sec": 0.03861834295094013,
+      "t_query": 0.0024846442975103855,
+      "t_gallery": 0.0026227408088743687,
+      "t_argmax": 2.421066164970398e-05,
+      "t_e2e": 0.005131595768034458,
+      "peak_rss_mib": 109.7421875,
+      "peak_vram_mib": 0.0
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "pairs_pkl": "/home/jh/sjn/traj_match/cursor_mod_4/pipeline/all_pairs_v2_maxdtw.pkl",
+  "pool_gidx": [
+    1629,
+    1338,
+    1462,
+    819,
+    3754,
+    895,
+    3456,
+    898,
+    7216,
+    1030,
+    2831,
+    1304,
+    1555,
+    3,
+    2266,
+    4,
+    1295,
+    7248,
+    1143,
+    1425,
+    1614,
+    794,
+    2864,
+    1628,
+    4552,
+    1998,
+    616,
+    1071,
+    7234,
+    1582,
+    6488,
+    982,
+    827,
+    6558,
+    2769,
+    3466
+  ],
+  "pool_size": 36,
+  "directions": {
+    "pre_anchor": {
+      "pool_idx": 29,
+      "global_pair_idx": 1582,
+      "mid": [
+        1745913414000,
+        114.40642503918545,
+        36.15688065091363
+      ],
+      "pre_npts": 10,
+      "post_npts": 10,
+      "pre_straightness": 0.993,
+      "post_straightness": 0.776,
+      "pre_start_lonlat": [
+        114.058089,
+        22.543482
+      ],
+      "pre_end_lonlat": [
+        114.057876,
+        22.543112
+      ],
+      "post_start_lonlat": [
+        114.057768,
+        22.542763
+      ],
+      "post_end_lonlat": [
+        114.057867,
+        22.543016
+      ],
+      "mod4_rank": 0,
+      "others_cover_top5": 2
+    },
+    "post_anchor": {
+      "pool_idx": 35,
+      "global_pair_idx": 3466,
+      "mid": [
+        1747293758800,
+        113.93739492130779,
+        22.51345433305715
+      ],
+      "pre_npts": 10,
+      "post_npts": 10,
+      "pre_straightness": 0.752,
+      "post_straightness": 0.771,
+      "pre_start_lonlat": [
+        114.057656,
+        22.54311
+      ],
+      "pre_end_lonlat": [
+        114.05786,
+        22.543099
+      ],
+      "post_start_lonlat": [
+        114.058058,
+        22.543051
+      ],
+      "post_end_lonlat": [
+        114.057908,
+        22.543099
+      ],
+      "mod4_rank": 0,
+      "others_cover_top5": 5
+    }
+  }
+}
